@@ -20,7 +20,6 @@
     "@vue/cli-plugin-babel": "^3.0.0-beta.10",
     "@vue/cli-plugin-typescript": "^3.0.0-beta.10",
     "@vue/cli-service": "^3.0.0-beta.10",
-    "dotenv": "^5.0.1",
     "firebase-tools": "^3.18.4",
     "lint-staged": "^6.0.0",
     "node-sass": "^4.7.2",
