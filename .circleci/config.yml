@@ -23,10 +23,22 @@ jobs:
       - run: yarn build
     
   deploy:
-    machine:
-        enabled: true
+    docker:
+      - image: circleci/node:8.10
     working_directory: ~/repo
     steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}-{{ checksum "functions/package.json" }}
+          - v1-dependencies-
+      - run: yarn install && cd functions && yarn install
+      - save_cache:
+          paths:
+            - node_modules
+            - functions/node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}-{{ checksum "functions/package.json" }}
+      - run: yarn build
       - run: yarn deploy:ci
 
 workflows:
