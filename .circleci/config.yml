@@ -38,3 +38,6 @@ jobs:
       
       # Build project
       - run: yarn build
+
+      # Deploy to Firebase
+      - run: yarn deploy:ci
