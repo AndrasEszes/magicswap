@@ -7,7 +7,7 @@ import { initialize as initializeFirebase } from './firestore'
 
 Vue.config.productionTip = false
 
-initializeFirebase().then(() => {
+initializeFirebase().then((firebase) => firebase.firestore().enablePersistence()).then(() => {
   new Vue({
     router,
     store,
