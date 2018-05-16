@@ -1,42 +1,46 @@
 <template>
-  <div>
-    <form @submit.prevent="createCard({ name: card })">
-      <input v-model="card" type="text" />
-      <button type="submit">Mentés</button>
-    </form>
-    <hr />
-    <div v-for="(card, cardId) in cards" :key="cardId">
-      <button class="button" @click="deleteCard(cardId)">"{{card.name}}" kártya eltávolítása...</button>
-    </div>
-  </div>
+  <v-layout v-scroll="handleScroll" fill-height wrap>
+    <v-flex v-for="(card, id) in cards" :key="id" class="pa-1" xs12 sm6 md4 lg3>
+      <v-card>
+        <v-card-title>{{card.name}}</v-card-title>
+      </v-card>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script lang="ts">
+import firebase from 'firebase'
 import { Component, Vue } from 'vue-property-decorator'
-import { watchCards, ICards, deleteCard, ICard, createCard } from '@/firestore/cards'
+import { ICards, fetchCards } from '@/firestore/cards'
 
 @Component
 export default class Cards extends Vue {
   public cards: ICards = {}
   public card: string = ''
 
-  private unsubscribeFromCards!: () => void
+  private lastDocumentSnapshot?: firebase.firestore.DocumentSnapshot
 
-  public mounted() {
-    this.unsubscribeFromCards = watchCards((cards) => { this.cards = cards })
+  public async mounted() {
+    const { cards, lastDocumentSnapshot } = await fetchCards()
+    this.cards = cards
+    this.lastDocumentSnapshot = lastDocumentSnapshot
   }
 
-  public beforeDestroy() {
-    this.unsubscribeFromCards()
-  }
+  public async handleScroll(e: Event) {
+    const { scrollingElement } = document
 
-  public deleteCard(cardId: string) {
-    deleteCard(cardId)
-  }
+    if (scrollingElement) {
+      const padding = 64 + 32
+      const offsetHeight = this.$el.offsetHeight
+      const scrollHeight = scrollingElement.scrollTop
+      const windowHeight = scrollingElement.clientHeight - padding
 
-  public createCard(card: ICard) {
-    createCard(card)
-    this.card = ''
+      if (offsetHeight - 500 <= scrollHeight + windowHeight) {
+        const { cards, lastDocumentSnapshot } = await fetchCards(this.lastDocumentSnapshot)
+        this.cards = { ...this.cards, ...cards }
+        this.lastDocumentSnapshot = lastDocumentSnapshot
+      }
+    }
   }
 }
 </script>
