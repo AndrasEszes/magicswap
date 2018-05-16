@@ -1,5 +1,4 @@
-import firebase from 'firebase'
-import 'firebase/firestore'
+import firebase from 'firebase/app'
 
 import config from '@/config'
 import { isProduction } from '@/lib/environment'

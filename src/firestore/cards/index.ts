@@ -1,4 +1,7 @@
-import firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
+
+type DocumentSnapshot = firebase.firestore.DocumentSnapshot
 
 export interface ICard {
   name: string
@@ -16,7 +19,7 @@ export const watchCards = (
   onUpdateCallback: (cards: ICards) => void,
   onErrorCallback?: (error: Error) => void,
 ) => {
-  return collection().limit(100).onSnapshot((snapshot) => {
+  return collection().onSnapshot((snapshot) => {
     const cards: ICards = {}
     snapshot.docs.forEach((document) => {
       cards[document.id] = document.data() as ICard
@@ -25,16 +28,13 @@ export const watchCards = (
   }, onErrorCallback)
 }
 
-export const fetchCards = async (
-  startAfter?: firebase.firestore.DocumentSnapshot,
-  limit: number = 100,
-) => {
+export const fetchCards = async (startAfter?: DocumentSnapshot, limit: number = 100) => {
   const query = collection().orderBy('name', 'asc').limit(limit)
-  const snapshot = startAfter ? await query.startAfter(startAfter).get() : await query.get()
+  const snapshot = await (startAfter ? query.startAfter(startAfter) : query).get()
 
   const output: {
     cards: ICards,
-    lastDocumentSnapshot?: firebase.firestore.DocumentSnapshot,
+    lastDocumentSnapshot?: DocumentSnapshot,
   } = {
     cards: {},
   }

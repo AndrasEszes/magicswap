@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import firebase from 'firebase'
+import { firestore } from 'firebase/app'
 import { Component, Vue } from 'vue-property-decorator'
 import { ICards, fetchCards } from '@/firestore/cards'
 
@@ -18,7 +18,7 @@ export default class Cards extends Vue {
   public cards: ICards = {}
   public card: string = ''
 
-  private lastDocumentSnapshot?: firebase.firestore.DocumentSnapshot
+  private lastDocumentSnapshot?: firestore.DocumentSnapshot
 
   public async mounted() {
     const { cards, lastDocumentSnapshot } = await fetchCards()
