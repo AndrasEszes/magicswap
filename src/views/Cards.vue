@@ -11,22 +11,45 @@
 <script lang="ts">
 import { firestore } from 'firebase/app'
 import { Component, Vue } from 'vue-property-decorator'
-import { ICards, fetchCards } from '@/firestore/cards'
+import { ICards, watchCards, IPagedCards } from '@/firestore/cards'
 
 @Component
 export default class Cards extends Vue {
   public cards: ICards = {}
-  public card: string = ''
+  public isLoading: boolean = false
 
+  private subscriptions: Array<() => void> = []
   private lastDocumentSnapshot?: firestore.DocumentSnapshot
 
-  public async mounted() {
-    const { cards, lastDocumentSnapshot } = await fetchCards()
-    this.cards = cards
-    this.lastDocumentSnapshot = lastDocumentSnapshot
+  public mounted() {
+    this.isLoading = true
+    this.subscriptions.push(
+      watchCards(this.handleOnWatchCards),
+    )
   }
 
-  public async handleScroll(e: Event) {
+  public beforeDestroy() {
+    this.subscriptions.forEach((unsubscribe) => unsubscribe())
+  }
+
+  public handleScroll(e: Event) {
+    if (this.shouldLoadNextPage(500)) {
+      this.isLoading = true
+      this.subscriptions.push(
+        watchCards(this.handleOnWatchCards, undefined, this.lastDocumentSnapshot),
+      )
+    }
+  }
+
+  private handleOnWatchCards(pagedCards: IPagedCards) {
+    this.isLoading = false,
+    this.cards = { ...this.cards, ...pagedCards.cards }
+    this.lastDocumentSnapshot = pagedCards.lastDocumentSnapshot
+  }
+
+  private shouldLoadNextPage(triggerHeight: number): boolean {
+    if (this.isLoading) { return false }
+
     const { scrollingElement } = document
 
     if (scrollingElement) {
@@ -35,12 +58,12 @@ export default class Cards extends Vue {
       const scrollHeight = scrollingElement.scrollTop
       const windowHeight = scrollingElement.clientHeight - padding
 
-      if (offsetHeight - 500 <= scrollHeight + windowHeight) {
-        const { cards, lastDocumentSnapshot } = await fetchCards(this.lastDocumentSnapshot)
-        this.cards = { ...this.cards, ...cards }
-        this.lastDocumentSnapshot = lastDocumentSnapshot
+      if (offsetHeight - triggerHeight <= scrollHeight + windowHeight) {
+        return true
       }
     }
+
+    return false
   }
 }
 </script>

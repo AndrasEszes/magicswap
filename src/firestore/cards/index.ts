@@ -1,7 +1,6 @@
 import firebase from 'firebase/app'
+import { QuerySnapshot, DocumentSnapshot, Query } from '@firebase/firestore-types'
 import 'firebase/firestore'
-
-type DocumentSnapshot = firebase.firestore.DocumentSnapshot
 
 export interface ICard {
   name: string
@@ -11,40 +10,45 @@ export interface ICards {
   [cardId: string]: ICard
 }
 
+export interface IPagedCards {
+  cards: ICards,
+  lastDocumentSnapshot?: DocumentSnapshot,
+}
+
 export const CARDS_COLLECTION = 'cards'
 
 export const collection = () => firebase.firestore().collection(CARDS_COLLECTION)
 
-export const watchCards = (
-  onUpdateCallback: (cards: ICards) => void,
+function snapshotToPagedCards(snapshot: QuerySnapshot): IPagedCards {
+  return snapshot.docs.reduce<IPagedCards>((pagedCards, document) => {
+    return {
+      // Add new key-value pair to an Object
+      cards: { ...pagedCards.cards, [document.id]: document.data() as ICard },
+      lastDocumentSnapshot: document,
+    }
+  }, {cards: {}})
+}
+
+function withOffset(query: Query, offset?: DocumentSnapshot): Query {
+  return offset ? query.startAfter(offset) : query
+}
+
+export function watchCards(
+  onUpdateCallback: (pagedCards: IPagedCards) => void,
   onErrorCallback?: (error: Error) => void,
-) => {
-  return collection().onSnapshot((snapshot) => {
-    const cards: ICards = {}
-    snapshot.docs.forEach((document) => {
-      cards[document.id] = document.data() as ICard
-    })
-    onUpdateCallback(cards)
+  offset?: DocumentSnapshot,
+  limit: number = 100,
+) {
+  return withOffset(collection().orderBy('name').limit(limit), offset).onSnapshot((snapshot) => {
+    onUpdateCallback(snapshotToPagedCards(snapshot))
   }, onErrorCallback)
 }
 
-export const fetchCards = async (startAfter?: DocumentSnapshot, limit: number = 100) => {
-  const query = collection().orderBy('name', 'asc').limit(limit)
-  const snapshot = await (startAfter ? query.startAfter(startAfter) : query).get()
-
-  const output: {
-    cards: ICards,
-    lastDocumentSnapshot?: DocumentSnapshot,
-  } = {
-    cards: {},
-  }
-
-  snapshot.docs.forEach((document) => {
-    output.cards[document.id] = document.data() as ICard
-    output.lastDocumentSnapshot = document
-  })
-
-  return output
+export function fetchCards(
+  offset?: DocumentSnapshot,
+  limit: number = 100,
+): Promise<IPagedCards> {
+  return withOffset(collection().orderBy('name').limit(limit), offset).get().then(snapshotToPagedCards)
 }
 
 export const deleteCard = (cardId: string) => {
