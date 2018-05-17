@@ -51,10 +51,10 @@ export function fetchCards(
   return withOffset(collection().orderBy('name').limit(limit), offset).get().then(snapshotToPagedCards)
 }
 
-export const deleteCard = (cardId: string) => {
+export function deleteCard(cardId: string) {
   return collection().doc(cardId).delete()
 }
 
-export const createCard = (card: ICard) => {
+export function createCard(card: ICard) {
   return collection().add(card)
 }
