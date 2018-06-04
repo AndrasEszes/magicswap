@@ -17,7 +17,7 @@
           @click="emitBid(id, bidStep)"
           :disabled="lastBidIsYours"
           block
-        >Bid!</v-btn>
+        >{{lastBidIsYours ? "My bid is winning!" : "Bid"}}</v-btn>
       </v-card-actions>
     </v-card>
 </template>
