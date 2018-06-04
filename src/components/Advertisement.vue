@@ -1,6 +1,6 @@
 <template>
     <v-card>
-      <v-card-media src="assets/lol.jpg" height="200px"></v-card-media>
+      <v-card-media src="https://media.wizards.com/2017/xln/en_yIHG7SYDro.png" height="200px"></v-card-media>
       <v-card-title primary-title>
         <div>
           <h3 class="headline mb-0">{{ card.name }}</h3>
@@ -8,9 +8,16 @@
       </v-card-title>
       <v-card-text>{{ description }}</v-card-text>
       <v-card-actions>
-        <v-btn @click="reserve" block color="orange">Buy Now!</v-btn>
-        <v-btn @click="bid" v-if="bidStep > 0" block color="orange">Bid!</v-btn>
-        <v-btn v-if="lastBidIsYours && bidStep == 0" block color="gray" disabled="true">last bid is yours!</v-btn>
+        <v-btn
+          @click="emitReserve(id)"
+          block
+        >Buy Now!</v-btn>
+        <v-btn
+          v-if="shouldShowBidButton"
+          @click="emitBid(id, bidStep)"
+          :disabled="lastBidIsYours"
+          block
+        >Bid!</v-btn>
       </v-card-actions>
     </v-card>
 </template>
@@ -20,7 +27,7 @@ import { Component, Prop, Vue, Emit } from 'vue-property-decorator'
 import { ICard } from '@/firestore/cards'
 
 @Component
-export default class Advertisment extends Vue {
+export default class Advertisement extends Vue {
   @Prop({
     required: true,
   })
@@ -51,6 +58,7 @@ export default class Advertisment extends Vue {
   public endOfBid?: Date
 
   @Prop({
+    default: 0,
     validator(value) {
       // If value isn't empty, then it's value must be greater than 0!
       return !value || value >= 0
@@ -84,8 +92,12 @@ export default class Advertisment extends Vue {
   }
 
   @Emit('onReserve')
-  public reserve(id: string) {
+  public emitReserve(id: string) {
     // noop
+  }
+
+  get shouldShowBidButton(): boolean {
+    return !!this.bidStep && this.bidStep > 0
   }
 }
 </script>

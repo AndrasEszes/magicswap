@@ -1,18 +1,55 @@
 <template>
-  <div class="home">
-    <img src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
-  </div>
+  <v-layout row wrap>
+    <v-flex class="pa-2" xs4>
+      <advertisement
+        :id="`the-first-one`"
+        :card="{ name: 'Adanto Vanguard' }"
+        :reservePrice="29900"
+        :bidStep="2990"
+        :endOfBid="endOfBid"
+        :currentBid="5980"
+        :quality="5"
+        :description="`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam nulla massa.`"
+      ></advertisement>
+    </v-flex>
+    <v-flex class="pa-2" xs4>
+      <advertisement
+        :id="`the-second-one`"
+        :card="{ name: 'Adanto Vanguard' }"
+        :reservePrice="29900"
+        :bidStep="2990"
+        :endOfBid="endOfBid"
+        :currentBid="5980"
+        :lastBidIsYours="true"
+        :quality="5"
+        :description="`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam nulla massa.`"
+      ></advertisement>
+    </v-flex>
+    <v-flex class="pa-2" xs4>
+      <advertisement
+        :id="`the-third-one`"
+        :card="{ name: 'Adanto Vanguard' }"
+        :reservePrice="29900"
+        :quality="5"
+        :description="`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam nulla massa.`"
+      ></advertisement>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
+
+import Advertisement from '@/components/Advertisement.vue'
 
 @Component({
   components: {
-    HelloWorld,
+    Advertisement,
   },
 })
-export default class Home extends Vue {}
+export default class Home extends Vue {
+  get endOfBid(): Date {
+    return new Date(Date.now() + 60 * 60 * 1000)
+  }
+}
 </script>

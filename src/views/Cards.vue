@@ -1,7 +1,11 @@
 <template>
   <v-layout v-scroll="handleScroll" fill-height wrap>
     <v-flex v-for="(card, id) in cards" :key="id" class="pa-1" xs12 sm6 md4 lg3>
-      <advertisment></advertisment>
+      <v-card>
+        <v-card-title>
+          {{ card.name }}
+        </v-card-title>
+      </v-card>
     </v-flex>
   </v-layout>
 </template>
@@ -11,13 +15,7 @@ import { firestore } from 'firebase/app'
 import { Component, Vue } from 'vue-property-decorator'
 import { ICards, watchCards, IPagedCards } from '@/firestore/cards'
 
-import Advertisment from '@/components/Advertisment.vue'
-
-@Component({
-  components: {
-    Advertisment,
-  },
-})
+@Component
 export default class Cards extends Vue {
   public cards: ICards = {}
   public isLoading: boolean = false

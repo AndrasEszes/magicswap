@@ -11,7 +11,10 @@ Vue.config.productionTip = false
 
 Vue.use(Vuetify)
 
-initializeFirebase().then((firebase) => firebase.firestore().enablePersistence()).then(() => {
+initializeFirebase().then((firebase) => {
+  firebase.firestore().settings({ timestampsInSnapshots: true })
+  return firebase.firestore().enablePersistence()
+}).then(() => {
   new Vue({
     router,
     store,
