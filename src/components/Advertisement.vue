@@ -7,12 +7,6 @@
         </div>
       </v-card-title>
       <v-card-text>{{ description }}</v-card-text>
-        <star-rating 
-          :rating="quality"
-          :read-only="true"
-          :show-rating="false"
-          :star-size="20"
-        ></star-rating>
       <v-card-actions>
         <v-btn
           @click="emitReserve(id)"
@@ -31,13 +25,8 @@
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from 'vue-property-decorator'
 import { ICard } from '@/firestore/cards'
-import StarRating from 'vue-star-rating'
 
-@Component({
-  components: {
-    StarRating,
-  },
-})
+@Component
 export default class Advertisement extends Vue {
   @Prop({
     required: true,
