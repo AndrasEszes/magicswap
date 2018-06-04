@@ -10,11 +10,12 @@
 import { firestore } from 'firebase/app'
 import { Component, Vue } from 'vue-property-decorator'
 import { ICards, watchCards, IPagedCards } from '@/firestore/cards'
-import Card from '@/components/card.vue'
+
+import Advertisment from '@/components/Advertisment.vue'
 
 @Component({
   components: {
-    Card,
+    Advertisment,
   },
 })
 export default class Cards extends Vue {

@@ -21,7 +21,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import { ICard } from '@/firestore/cards'
 
 @Component
-export default class Card extends Vue {
+export default class Advertisment extends Vue {
   @Prop({
     validator: (value) => value.length <= 160,
   })
