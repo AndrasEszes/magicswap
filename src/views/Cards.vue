@@ -1,7 +1,7 @@
 <template>
   <v-layout v-scroll="handleScroll" fill-height wrap>
     <v-flex v-for="(card, id) in cards" :key="id" class="pa-1" xs12 sm6 md4 lg3>
-      <Card></Card>
+      <advertisment></advertisment>
     </v-flex>
   </v-layout>
 </template>
