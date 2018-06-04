@@ -1,9 +1,7 @@
 <template>
   <v-layout v-scroll="handleScroll" fill-height wrap>
     <v-flex v-for="(card, id) in cards" :key="id" class="pa-1" xs12 sm6 md4 lg3>
-      <v-card>
-        <v-card-title>{{card.name}}</v-card-title>
-      </v-card>
+      <Card></Card>
     </v-flex>
   </v-layout>
 </template>
@@ -12,8 +10,13 @@
 import { firestore } from 'firebase/app'
 import { Component, Vue } from 'vue-property-decorator'
 import { ICards, watchCards, IPagedCards } from '@/firestore/cards'
+import Card from '@/components/card.vue'
 
-@Component
+@Component({
+  components: {
+    Card,
+  },
+})
 export default class Cards extends Vue {
   public cards: ICards = {}
   public isLoading: boolean = false
