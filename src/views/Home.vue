@@ -10,6 +10,7 @@
         :currentBid="5980"
         :quality="2"
         :description="`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam nulla massa.`"
+        :duedate="new Date('Mon Jun 04 2018 23:36:27')"
         @onBid="handleBid"
         @onReserve="handleReserve"
       ></advertisement>
@@ -25,6 +26,7 @@
         :lastBidIsYours="true"
         :quality="5"
         :description="`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam nulla massa.`"
+        :duedate="new Date('Mon Jun 05 2018 22:36:27')"
         @onBid="handleBid"
         @onReserve="handleReserve"
       ></advertisement>
@@ -36,6 +38,7 @@
         :reservePrice="29900"
         :quality="4"
         :description="`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam nulla massa.`"
+        :duedate="new Date('Mon Jun 04 2018 22:46:27')"
         @onBid="handleBid"
         @onReserve="handleReserve"
       ></advertisement>

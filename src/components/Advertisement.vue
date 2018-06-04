@@ -7,6 +7,7 @@
         </div>
       </v-card-title>
       <v-card-text>{{ description }}</v-card-text>
+      <count-down :date="duedate"></count-down>
       <star-rating :qrating="quality"></star-rating>
       <v-card-actions>
         <v-btn
@@ -27,10 +28,12 @@
 import { Component, Prop, Vue, Emit } from 'vue-property-decorator'
 import { ICard } from '@/firestore/cards'
 import StarRating from '@/components/StarRating.vue'
+import CountDown from '@/components/CountDown.vue'
 
 @Component({
   components: {
     StarRating,
+    CountDown,
   },
 })
 export default class Advertisement extends Vue {
@@ -91,6 +94,9 @@ export default class Advertisement extends Vue {
 
   @Prop()
   public lastBidIsYours!: boolean
+
+  @Prop()
+  public duedate?: Date
 
   @Emit('onBid')
   public emitBid(id: string, bidStep: number): void {
