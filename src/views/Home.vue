@@ -10,6 +10,8 @@
         :currentBid="5980"
         :quality="5"
         :description="`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam nulla massa.`"
+        @onBid="handleBid"
+        @onReserve="handleReserve"
       ></advertisement>
     </v-flex>
     <v-flex class="pa-2" xs4>
@@ -23,6 +25,8 @@
         :lastBidIsYours="true"
         :quality="5"
         :description="`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam nulla massa.`"
+        @onBid="handleBid"
+        @onReserve="handleReserve"
       ></advertisement>
     </v-flex>
     <v-flex class="pa-2" xs4>
@@ -32,6 +36,8 @@
         :reservePrice="29900"
         :quality="5"
         :description="`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam nulla massa.`"
+        @onBid="handleBid"
+        @onReserve="handleReserve"
       ></advertisement>
     </v-flex>
   </v-layout>
@@ -50,6 +56,16 @@ import Advertisement from '@/components/Advertisement.vue'
 export default class Home extends Vue {
   get endOfBid(): Date {
     return new Date(Date.now() + 60 * 60 * 1000)
+  }
+
+  public handleBid(id: string, bidStep: number) {
+    // tslint:disable-next-line no-console
+    console.log(`Someone made a $${bidStep} Bid for the "${id}" Advertisment!`)
+  }
+
+  public handleReserve(id: string) {
+    // tslint:disable-next-line no-console
+    console.log(`Someone bought the "${id}" Advertisment! \\o/`)
   }
 }
 </script>
