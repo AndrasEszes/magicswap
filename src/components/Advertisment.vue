@@ -17,40 +17,76 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Emit } from 'vue-property-decorator'
 import { ICard } from '@/firestore/cards'
 
 @Component
 export default class Advertisment extends Vue {
   @Prop({
-    validator: (value) => value.length <= 160,
+    required: true,
   })
-  public description?: string
-
   public id!: string
-  public card!: ICard
 
   @Prop({
-    validator: (value) => value > 0 && value <= 5,
+    required: true,
   })
-  public quality?: number
+  public card!: ICard
 
-  public reservePrice?: number
-  public currentBid: number = 0
+  @Prop()
   public bidStep?: number
 
   @Prop({
-    validator: (value) => value === 0 && value > Date.now,
+    required: true,
+    validator(value) {
+      return value > 0 && value <= 5
+    },
+  })
+  public quality!: number
+
+  @Prop({
+    validator(value) {
+      // If value isn't empty, then it's value must be greater than Now!
+      return !value || value > new Date()
+    },
   })
   public endOfBid?: Date
-  public lastBidIsYours?: boolean
 
-  public bid(id: string, bidStep: number): void {
-    this.currentBid += bidStep
+  @Prop({
+    validator(value) {
+      // If value isn't empty, then it's value must be greater than 0!
+      return !value || value >= 0
+    },
+  })
+  public currentBid?: number
+
+  @Prop({
+    required: true,
+    validator(value) {
+      return value.length <= 160
+    },
+  })
+  public description!: string
+
+  @Prop({
+    required: true,
+    validator(value) {
+      // It wasn't in the issue, but it's clear why it's important
+      return value > 0
+    },
+  })
+  public reservePrice!: number
+
+  @Prop()
+  public lastBidIsYours!: boolean
+
+  @Emit('onBid')
+  public emitBid(id: string, bidStep: number): void {
+    // noop
   }
 
+  @Emit('onReserve')
   public reserve(id: string) {
-      return 'Hello'
+    // noop
   }
 }
 </script>
