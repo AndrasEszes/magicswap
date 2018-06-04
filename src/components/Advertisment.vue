@@ -1,18 +1,17 @@
 <template>
     <v-card>
-        <v-card-media src="assets/lol.jpg" height="200px">
-        </v-card-media>
-            <v-card-title primary-title>
-                <div>
-                    <h3 class="headline mb-0">{{ card.name }}</h3>
-                </div>
-            </v-card-title>
-            <v-card-text>{{ description }}</v-card-text>
-        <v-card-actions>
-            <v-btn @click="reserve" block color="orange">Buy Now!</v-btn>
-            <v-btn @click="bid" v-if="bidStep > 0" block color="orange">Bid!</v-btn>
-            <v-btn v-if="lastBidIsYours && bidStep == 0" block color="gray" disabled="true">last bid is yours!</v-btn>
-        </v-card-actions>
+      <v-card-media src="assets/lol.jpg" height="200px"></v-card-media>
+      <v-card-title primary-title>
+        <div>
+          <h3 class="headline mb-0">{{ card.name }}</h3>
+        </div>
+      </v-card-title>
+      <v-card-text>{{ description }}</v-card-text>
+      <v-card-actions>
+        <v-btn @click="reserve" block color="orange">Buy Now!</v-btn>
+        <v-btn @click="bid" v-if="bidStep > 0" block color="orange">Bid!</v-btn>
+        <v-btn v-if="lastBidIsYours && bidStep == 0" block color="gray" disabled="true">last bid is yours!</v-btn>
+      </v-card-actions>
     </v-card>
 </template>
 
