@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-icon v-for="n in 5" :key="n" :color="isFilled(n) ? 'amber' : 'gray'">
-      {{ isFilled(n) ? 'star' : 'star_outline' }}
+    <v-icon v-for="n in 5" :key="n" :color="color(n)">
+      {{ icon(n) }}
     </v-icon>
   </div>
 </template>
@@ -19,7 +19,15 @@ export default class StarRating extends Vue {
   })
   public qrating!: number
 
-  public isFilled(n: number): boolean {
+  public color(n: number): string {
+    return this.isFilled(n) ? 'amber' : 'grey'
+  }
+
+  public icon(n: number): string {
+    return this.isFilled(n) ? 'star' : 'star_outline'
+  }
+
+  private isFilled(n: number): boolean {
     return n <= this.qrating
   }
 }
