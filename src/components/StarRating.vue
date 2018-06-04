@@ -13,7 +13,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Component
-export default class Starrating extends Vue {
+export default class StarRating extends Vue {
     @Prop({
         required: true,
         validator(value) {
