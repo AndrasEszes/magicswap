@@ -9,11 +9,12 @@
       <v-card-text>{{ description }}</v-card-text>
       <count-down :date="duedate"></count-down>
       <star-rating :qrating="quality"></star-rating>
+      <v-card-text v-if="currentBid">Current biding price: {{currentBid}}</v-card-text>
       <v-card-actions>
         <v-btn
           @click="emitReserve(id)"
           block
-        >Buy Now!</v-btn>
+        >Buy Now!<span class="price">for ({{reservePrice}} huf)</span></v-btn>
         <v-btn
           v-if="shouldShowBidButton"
           @click="emitBid(id, bidStep)"
@@ -113,3 +114,11 @@ export default class Advertisement extends Vue {
   }
 }
 </script>
+<style lang="scss" scoped>
+ .price {
+   font-size: 12px;
+   font-weight: 300;
+   text-transform: lowercase
+ }
+</style>
+
