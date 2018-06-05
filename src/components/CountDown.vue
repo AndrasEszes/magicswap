@@ -1,7 +1,7 @@
 <template>
   <v-layout justify-center>
     <template v-for="(digit, i) in digits">
-      <v-flex d-inline :key="`digit-${i}`" xs1>
+      <v-flex d-inline :key="`digit-${i}`" :xs1="!fill">
         <v-layout align-center column>
           <v-flex>
             <strong class="title">{{digit.number}}</strong>
@@ -11,7 +11,7 @@
           </v-flex>
         </v-layout>
       </v-flex>
-      <v-flex class="text-xs-center" v-if="i < digits.length - 1" :key="`colon-${i}`" xs1>
+      <v-flex class="text-xs-center" v-if="i < digits.length - 1" :key="`colon-${i}`" :xs1="!fill">
         <span>:</span>
       </v-flex>
     </template>
@@ -23,9 +23,13 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Component
 export default class CountDown extends Vue {
+  public now: Date = new Date()
+
   @Prop()
   public date!: Date
-  public now: Date = new Date()
+
+  @Prop()
+  public fill!: boolean
 
   public mounted() {
     setInterval(() => { this.now = new Date() }, 1000)
