@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="star-container">
     <v-icon v-for="n in 5" :key="n" :color="color(n)">
       {{ icon(n) }}
     </v-icon>
@@ -32,3 +32,10 @@ export default class StarRating extends Vue {
   }
 }
 </script>
+<style lang="scss" scoped>
+  .star-container {
+    width: 120px;
+    margin: auto;
+  }
+</style>
+
