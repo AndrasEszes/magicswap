@@ -1,22 +1,21 @@
 <template>
-  <ul class="vuejs-countdown">
-        <li v-if="days() > 0">
-            <p class="digit">{{ digitals(days()) }}</p>
-            <p class="text">{{ days() > 1 ? 'days' : 'day' }}</p>
-        </li>
-        <li>
-            <p class="digit">{{ digitals(hours()) }}</p>
-            <p class="text">{{ hours() > 1 ? 'hours' : 'hour' }}</p>
-        </li>
-        <li>
-            <p class="digit">{{ digitals(minutes()) }}</p>
-            <p class="text">min</p>
-        </li>
-        <li>
-            <p class="digit">{{ digitals(seconds()) }}</p>
-            <p class="text">Sec</p>
-        </li>
-    </ul>
+  <v-layout justify-center>
+    <template v-for="(digit, i) in digits">
+      <v-flex d-inline :key="`digit-${i}`" xs1>
+        <v-layout align-center column>
+          <v-flex>
+            <strong class="title">{{digit.number}}</strong>
+          </v-flex>
+          <v-flex>
+            <span class="caption">{{digit.title}}</span>
+          </v-flex>
+        </v-layout>
+      </v-flex>
+      <v-flex class="text-xs-center" v-if="i < digits.length - 1" :key="`colon-${i}`" xs1>
+        <span>:</span>
+      </v-flex>
+    </template>
+  </v-layout>
 </template>
 
 <script lang="ts">
@@ -24,83 +23,46 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Component
 export default class CountDown extends Vue {
-  @Prop() public date!: Date
-
-  public now: number = Math.trunc(new Date().getTime() / 1000)
-  public usableDate: number = Math.trunc(this.date.getTime() / 1000)
-
-  public seconds(): number {
-    return (this.usableDate - this.now) % 60
-  }
-  public minutes(): number {
-    return Math.trunc((this.usableDate - this.now) / 60) % 60
-  }
-  public hours(): number {
-    return Math.trunc((this.usableDate - this.now) / 60 / 60) % 24
-  }
-  public days(): number {
-    return Math.trunc((this.usableDate - this.now) / 60 / 60 / 24)
-  }
+  @Prop()
+  public date!: Date
+  public now: Date = new Date()
 
   public mounted() {
-    window.setInterval(() => {
-      this.now = Math.trunc(new Date().getTime() / 1000)
-    }, 1000)
+    setInterval(() => { this.now = new Date() }, 1000)
   }
 
-  public data() {
-    return { now: Math.trunc(new Date().getTime() / 1000) }
+  public get digits() {
+    const duration = this.duration
+
+    return [{
+      number: this.formatDigit(duration.days),
+      title: 'days',
+    }, {
+      number: this.formatDigit(duration.hours),
+      title: 'hours',
+    }, {
+      number: this.formatDigit(duration.minutes),
+      title: 'mins',
+    }, {
+      number: this.formatDigit(duration.seconds),
+      title: 'secs',
+    }]
   }
 
-  public digitals(digit: number) {
-    if (digit < 10) {
-      return 0 + digit
-    } else {
-      return digit
+  private get duration() {
+    const now = Math.trunc(+this.now / 1000)
+    const due = Math.trunc(+this.date / 1000)
+
+    return {
+      days: Math.trunc((due - now) / 60 / 60 / 24),
+      hours: Math.trunc((due - now) / 60 / 60) % 24,
+      minutes: Math.trunc((due - now) / 60) % 60,
+      seconds: (due - now) % 60,
     }
+  }
+
+  private formatDigit(digit: number) {
+    return digit < 10 ? `0${digit}` : `${digit}`
   }
 }
 </script>
-<style lang="scss" scoped>
-.vuejs-countdown {
-  padding: 0;
-  width: 155px;
-  margin: auto;
-}
-.vuejs-countdown li {
-  display: inline-block;
-  margin: 0 8px;
-  text-align: center;
-  position: relative;
-}
-.vuejs-countdown li p {
-  margin: 0;
-}
-.vuejs-countdown li:after {
-  content: ":";
-  position: absolute;
-  top: -2px;
-  right: -13px;
-  font-size: 20px;
-}
-.vuejs-countdown li:first-of-type {
-  margin-left: 0;
-}
-.vuejs-countdown li:last-of-type {
-  margin-right: 0;
-}
-.vuejs-countdown li:last-of-type:after {
-  content: "";
-}
-.vuejs-countdown .digit {
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.4;
-  margin-bottom: 0;
-}
-.vuejs-countdown .text {
-  text-transform: uppercase;
-  margin-bottom: 0;
-  font-size: 10px;
-}
-</style>

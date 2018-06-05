@@ -1,15 +1,18 @@
 <template>
     <v-card>
       <v-card-media src="https://media.wizards.com/2017/xln/en_yIHG7SYDro.png" height="200px"></v-card-media>
+
       <v-card-title primary-title>
-        <div>
-          <h3 class="headline mb-0">{{ card.name }}</h3>
-        </div>
+        <h3 class="headline mb-0">{{ card.name }}</h3>
       </v-card-title>
-      <v-card-text>{{ description }}</v-card-text>
-      <count-down :date="duedate"></count-down>
-      <star-rating :qrating="quality"></star-rating>
-      <v-card-text v-if="currentBid">Current biding price: {{currentBid}}</v-card-text>
+
+      <v-card-text>
+        <p>{{ description }}</p>
+        <count-down :date="duedate"></count-down>
+        <star-rating :qrating="quality"></star-rating>
+        <span v-if="currentBid">Current biding price: {{currentBid}}</span>
+      </v-card-text>
+
       <v-card-actions>
         <v-btn
           @click="emitReserve(id)"
