@@ -1,6 +1,10 @@
 <template>
   <v-layout row wrap>
-    <v-flex class="pa-2" xs4>
+    <v-flex d-flex xs12 sm6 md2>
+      <filterpanel></filterpanel>
+    </v-flex>
+    <v-flex d-flex xs12 sm6 md10>
+          <v-flex class="pa-2" xs4>
       <advertisement
         :id="`the-first-one`"
         :card="{ name: 'Adanto Vanguard' }"
@@ -43,6 +47,7 @@
         @onReserve="handleReserve"
       ></advertisement>
     </v-flex>
+    </v-flex>
   </v-layout>
 </template>
 
@@ -50,10 +55,12 @@
 import { Component, Vue } from 'vue-property-decorator'
 
 import Advertisement from '@/components/Advertisement.vue'
+import FilterPanel from '@/components/FilterPanel.vue'
 
 @Component({
   components: {
     Advertisement,
+    FilterPanel,
   },
 })
 export default class Home extends Vue {

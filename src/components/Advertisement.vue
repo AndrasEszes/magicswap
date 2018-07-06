@@ -85,9 +85,6 @@ export default class Advertisement extends Vue {
   @Prop()
   public lastBidIsYours!: boolean
 
-  @Prop()
-  public duedate?: Date
-
   @Emit('onBid')
   public emitBid(id: string, bidStep: number): void {
     // noop

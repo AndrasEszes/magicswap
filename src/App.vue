@@ -7,6 +7,7 @@
         <v-btn to="/" flat>Home</v-btn>
         <v-btn to="/about" flat>About</v-btn>
         <v-btn to="/cards" flat>Cards</v-btn>
+        <v-btn to="/login" flat>Login</v-btn>
       </v-toolbar-items>
       </v-toolbar>
     <v-content>
